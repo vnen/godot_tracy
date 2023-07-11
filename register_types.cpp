@@ -1,15 +1,21 @@
 #include "register_types.h"
 
-#include "core/engine.h"
+#include "core/config/engine.h"
 #include "tracy_profiler.h"
 
-void register_godot_tracy_types() {
+void initialize_godot_tracy_module(ModuleInitializationLevel p_level) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_CORE) {
+		return;
+	}
 	ClassDB::register_class<TracyProfiler>();
 
 	TracyProfiler::init_singleton();
 	Engine::get_singleton()->add_singleton(Engine::Singleton("TracyProfiler", TracyProfiler::get_singleton()));
 }
 
-void unregister_godot_tracy_types() {
+void uninitialize_godot_tracy_module(ModuleInitializationLevel p_level) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_CORE) {
+		return;
+	}
 	TracyProfiler::finalize_singleton();
 }
